@@ -1,0 +1,27 @@
+import cv2
+import numpy as np
+print(cv2.__version__)
+
+facecascade = cv2.CascadeClassifier("C:\\Users\\bbyip\\PycharmProjects\\pythonProject1\\haarcascade_frontalface_default.xml")
+
+capture = cv2.VideoCapture(0)
+# capture = cv2.VideoCapture(0)
+capture.set(3, 640)
+capture.set(4, 480)
+
+while True:
+    success, frame = capture.read()
+    cv2.putText(frame, 'MBS3523 Assignment 1b-Q4 Name: Ho Chun Yip', (20, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (255, 0, 255), 2)
+    frameGray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    frameGray = cv2.cvtColor(frameGray, cv2.COLOR_GRAY2BGR)
+    faces = facecascade.detectMultiScale(frameGray, 1.2, 10)
+    for (x, y, w, h) in faces:
+        cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 255), 2)
+        roiImg = frame[y:y + h, x:x + w].copy()
+        frameGray[y:y + h, x:x + w]=roiImg
+    cv2.imshow('Frame', frameGray)
+    if cv2.waitKey(1) == ord('q'):
+        break
+
+capture.release()
+cv2.destroyAllWindows()
